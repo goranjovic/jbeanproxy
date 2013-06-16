@@ -16,24 +16,26 @@ So, what this library does is to generate a wrapper class implementing the same 
 on the fly and redirect all method calls to the original object, except the setter methods
 which also have to fire the event.
 
-        //create the original bean
-        Person real = new PersonImpl();
-		real.setFirstName("Chuck");
-		real.setLastName("Norris");
+```java
+    //create the original bean
+    Person real = new PersonImpl();
+	real.setFirstName("Chuck");
+	real.setLastName("Norris");
 		
-		BoundBeanFactory factory = new BoundBeanFactory();
-		//state which properties we want to track
-		factory.setBoundProperties(new String[]{"firstName", "lastName"	});
-		factory.setPropertyChangeListener(new DummyPropertyChangeListener());
+	BoundBeanFactory factory = new BoundBeanFactory();
+	//state which properties we want to track
+	factory.setBoundProperties(new String[]{"firstName", "lastName"	});
+	factory.setPropertyChangeListener(new DummyPropertyChangeListener());
 		
-		//now we get the proxy object
-		//all tracked setters invoked on this object
-		//will fire the event
-		Person proxy = factory.createWrapperProxy(real, Person.class);
-		
-		//try and see
-		proxy.setFirstName("Someone");
-		proxy.setLastName("Else");
+	//now we get the proxy object
+	//all tracked setters invoked on this object
+	//will fire the event
+	Person proxy = factory.createWrapperProxy(real, Person.class);
+	
+	//try and see
+	proxy.setFirstName("Someone");
+	proxy.setLastName("Else");
+```
 		
 # License
 
