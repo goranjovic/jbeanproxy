@@ -5,4 +5,6 @@
 *.war
 *.ear
 .classpath
+.settings
 .project
+target

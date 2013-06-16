@@ -38,6 +38,23 @@ public class BoundBeanFactory extends WrapperProxyFactory {
 		this.boundProperties = boundProperties;
 	}
 
+	public void setBoundProperties(String[] array) {
+		this.boundProperties = new ArrayList<String>(array.length);
+		for (String item : array) {
+			this.boundProperties.add(item);
+		}
+	}
+
+	private boolean initSync = false;
+
+	public boolean isInitSync() {
+		return initSync;
+	}
+
+	public void setInitSync(boolean initSync) {
+		this.initSync = initSync;
+	}
+
 	public void adjustProxyClass(CtClass proxyClass) throws Exception {
 
 		ClassPool pool = ClassPool.getDefault();
@@ -65,12 +82,14 @@ public class BoundBeanFactory extends WrapperProxyFactory {
 			PropertyChangeSupport pcs = ((BoundBean) proxy).getPropertyChangeSupport();
 			pcs.addPropertyChangeListener(getPropertyChangeListener());
 
-			// must fire events for all bound properties
-			// for initial syncing
-			for (String boundProperty : boundProperties) {
-				Object value = BeanUtil.getPropertyValue(proxy, boundProperty);
-				if (value != null) {
-					pcs.firePropertyChange(boundProperty, null, value);
+			if (initSync) {
+				// must fire events for all bound properties
+				// for initial syncing
+				for (String boundProperty : boundProperties) {
+					Object value = BeanUtil.getPropertyValue(proxy, boundProperty);
+					if (value != null) {
+						pcs.firePropertyChange(boundProperty, null, value);
+					}
 				}
 			}
 
